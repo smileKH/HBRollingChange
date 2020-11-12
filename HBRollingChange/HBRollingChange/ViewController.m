@@ -144,20 +144,17 @@ static NSString * const cellID = @"cellID";
 }
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     CGFloat yOffset  = scrollView.contentOffset.y;
-//    NSLog(@"打印一下滚动的轨迹%f",yOffset);
-    [self showNaviWithoffSetY:yOffset];
-
+    NSLog(@"打印一下滚动的轨迹%f",yOffset);
+//    [self showNaviWithoffSetY:yOffset];
       //判断是否有刘海
-        CGFloat searchBoxOffY = 0;
-        CGFloat scrollOffY = 0;
+        CGFloat searchBoxOffY = bAllNavTotalHeight-10;
+        CGFloat scrollOffY = bAllNavTotalHeight-30-10;
         CGFloat collectionOffYY = 0;
         if (kDevice_Is_iPhoneXScreen) {
-            searchBoxOffY = bStatusBarHeight+15;
-            scrollOffY = bStatusBarHeight;
+            searchBoxOffY = bAllNavTotalHeight-24-10;
             collectionOffYY = bAllNavTotalHeight-30;
         } else {
-            searchBoxOffY = bAllNavTotalHeight-3;
-            scrollOffY = bStatusBarHeight+3;
+            searchBoxOffY = bAllNavTotalHeight-10;
             collectionOffYY = bAllNavTotalHeight;
         }
     if (yOffset>0) {
@@ -167,21 +164,25 @@ static NSString * const cellID = @"cellID";
                 CGRect f = self.searchBoxView.frame;
 //                f.origin.y = 15;
                 f.origin.y = scrollOffY;
+                
                 //改变头部视图的frame
                 self.searchBoxView.frame = f;
                 self.searchBoxView.backgroundColor = RGBA(229, 229, 229, 1);
             }else{
                 CGRect f = self.searchBoxView.frame;
                 f.origin.y = bAllNavTotalHeight + 15-yOffset;
-                f.size.width = (SCREEN_WIDTH-2*15) - 2*yOffset;
+                //这个如何处理，防止抖动问题
+                CGFloat width = (SCREEN_WIDTH-2*15)- 2*yOffset;
+                f.size.width = width;
                 //改变头部视图的frame
                 self.searchBoxView.frame = f;
+                
             }
             
         }else{
             CGRect f = self.searchBoxView.frame;
             f.origin.y = scrollOffY;
-            f.size.width = (SCREEN_WIDTH-2*HOME_SPACING_LEFT) - 2*(bAllNavTotalHeight);
+            f.size.width = (SCREEN_WIDTH-2*HOME_SPACING_LEFT) - 2*searchBoxOffY;
             //改变头部视图的frame
             self.searchBoxView.frame = f;
         }
@@ -201,6 +202,8 @@ static NSString * const cellID = @"cellID";
                 self.collectionView.frame = f;
             }
         }
+    }else{
+        self.searchBoxView.backgroundColor = [UIColor whiteColor];
     }
 }
 - (void)showNaviWithoffSetY:(CGFloat)offSetY{
